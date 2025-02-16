@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SecenekButon from "./SecenekButon";
 
 import veri from "./veri";
@@ -16,13 +16,14 @@ export default function Page() {
   const [soruDegisiyor, soruDegisiyorGuncelle] = useState(false); // soruDegisiyor state'i ve soruDegisiyorGuncelle fonksiyonu
   const [oyunBitti, oyunBittiGuncelle] = useState(false); // oyunBitti state'i ve oyunBittiGuncelle fonksiyonu
 
-  if(can === 0) { // Eğer can 0 ise oyunu bitir
-    oyunBittiGuncelle(true);
-  }
+  console.log("Sayfa render oluyor...")
 
-  if(veri.length === aktifSoruIndex) { // Eğer aktifSoruIndex veri dizisinin uzunluğuna eşitse oyunu bitir
-    oyunBittiGuncelle(true);
-  }
+  useEffect(() => {
+    if(can === 0) { // Eğer can 0 ise oyunu bitir
+      oyunBittiGuncelle(true);
+    }
+  }, [can]); // can değiştiğinde çalışacak. (useeffect içine state veya props eklersek, sadece o state veya props değiştiğinde çalışır)
+
 
   // Kullanıcının seçim yapmasını sağlayan fonksiyon
   function secimYap(indeks) {
@@ -43,7 +44,7 @@ export default function Page() {
     setTimeout(() => {
       // Eğer aktifSoruIndex son soruya ulaştıysa oyunu bitir
       if (aktifSoruIndex === veri.length - 1) {
-        alert("Oyun bitti");
+        oyunBittiGuncelle(true); // Oyun bitti durumunu true yap
         return;
       }
 
@@ -54,7 +55,7 @@ export default function Page() {
       dogruIndexGuncelle(null);
       yanlisIndexGuncelle(null);
       soruDegisiyorGuncelle(false); // Soru değişiyor durumunu false yap
-    }, 3000);
+    }, 1000); // 1 saniye bekle
   }
 
   return (
@@ -69,7 +70,7 @@ export default function Page() {
       </div>
 
       {oyunBitti ? ( // Oyun bitti mi kontrol et
-        <BitisEkrani />
+        <BitisEkrani puan={puan} can={can} />
       ) : ( // Oyun bitmediyse
         <SoruEkrani
           veri={veri}
