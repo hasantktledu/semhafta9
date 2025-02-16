@@ -4,6 +4,8 @@ import { useState } from "react";
 import SecenekButon from "./SecenekButon";
 
 import veri from "./veri";
+import SoruEkrani from "./SoruEkrani";
+import BitisEkrani from "./BitisEkrani";
 
 export default function Page() {
   const [puan, puanGuncelle] = useState(0); // puan state'i ve puanGuncelle fonksiyonu
@@ -12,6 +14,15 @@ export default function Page() {
   const [yanlisIndex, yanlisIndexGuncelle] = useState(null); // yanlisIndex state'i ve yanlisIndexGuncelle fonksiyonu
   const [aktifSoruIndex, aktifSoruIndexGuncelle] = useState(0); // aktifSoruIndex state'i ve aktifSoruIndexGuncelle fonksiyonu
   const [soruDegisiyor, soruDegisiyorGuncelle] = useState(false); // soruDegisiyor state'i ve soruDegisiyorGuncelle fonksiyonu
+  const [oyunBitti, oyunBittiGuncelle] = useState(false); // oyunBitti state'i ve oyunBittiGuncelle fonksiyonu
+
+  if(can === 0) { // Eğer can 0 ise oyunu bitir
+    oyunBittiGuncelle(true);
+  }
+
+  if(veri.length === aktifSoruIndex) { // Eğer aktifSoruIndex veri dizisinin uzunluğuna eşitse oyunu bitir
+    oyunBittiGuncelle(true);
+  }
 
   // Kullanıcının seçim yapmasını sağlayan fonksiyon
   function secimYap(indeks) {
@@ -42,7 +53,7 @@ export default function Page() {
       // Doğru ve yanlış cevap indekslerini sıfırla
       dogruIndexGuncelle(null);
       yanlisIndexGuncelle(null);
-        soruDegisiyorGuncelle(false); // Soru değişiyor durumunu false yap
+      soruDegisiyorGuncelle(false); // Soru değişiyor durumunu false yap
     }, 3000);
   }
 
@@ -57,17 +68,18 @@ export default function Page() {
         </div>
       </div>
 
-      <section className="flex flex-col items-center justify-center">
-        <p className="mb-8 text-4xl">{veri[aktifSoruIndex].soru}</p>
-
-        <div className="flex flex-col items-center justify-center gap-4">
-            {
-                veri[aktifSoruIndex].secenekler.map((secenek, indeks) => (
-                    <SecenekButon key={indeks} soruDegisiyor={soruDegisiyor} secenek={secenek} indeks={indeks} secimYap={secimYap} dogruIndex={dogruIndex} yanlisIndex={yanlisIndex} />
-                ))
-            }
-        </div>
-      </section>
+      {oyunBitti ? ( // Oyun bitti mi kontrol et
+        <BitisEkrani />
+      ) : ( // Oyun bitmediyse
+        <SoruEkrani
+          veri={veri}
+          aktifSoruIndex={aktifSoruIndex}
+          secimYap={secimYap}
+          dogruIndex={dogruIndex}
+          yanlisIndex={yanlisIndex}
+          soruDegisiyor={soruDegisiyor}
+        />
+      )}
     </main>
   );
 }
