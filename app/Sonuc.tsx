@@ -12,7 +12,7 @@ export default function Sonuc({ aranan }: { aranan: string }) {
       const response = await fetch(`/gts.json`);
       const veri = await response.json();
 
-      setBulunanMaddeler(veri.filter((eleman: { madde: string }) => eleman.madde === aranan));
+      setBulunanMaddeler(veri.filter((eleman: { madde: string }) => eleman.madde.toLocaleLowerCase('tr-TR') === aranan.toLocaleLowerCase('tr-TR')));
       setYukleniyor(false);
     }
 
