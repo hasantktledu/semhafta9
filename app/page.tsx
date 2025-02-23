@@ -8,9 +8,15 @@ import { useState } from "react";
 
 export default function Home() {
   const [aranan, setAranan] = useState("");
+  const [aramaBaslat, setAramaBaslat] = useState(false);
 
   function aramaYap() {
+    setAramaBaslat(true);
+  }
 
+  function inputDegisme(olay: React.ChangeEvent<HTMLInputElement>) {
+    setAramaBaslat(false) // input değiştiğinde arama durdurulmalı / gizlenmeli
+    setAranan(olay.currentTarget.value)
   }
 
   return (
@@ -22,14 +28,16 @@ export default function Home() {
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">
           <div className="flex w-full max-w-sm items-center space-x-2">
-            <Input type="text" placeholder="Sözcük girin.." value={aranan} onChange={ (o)=>setAranan(o.currentTarget.value) } />
+            <Input type="text" placeholder="Sözcük girin.." value={aranan} onChange={ inputDegisme } />
             <Button onClick={aramaYap} type="submit">
               Ara
             </Button>
           </div>
         </div>
 
-        <Sonuc aranan={aranan} />
+        { /* arama başlat düğmesine tıklanmışsa */ }
+        {aramaBaslat && <Sonuc aranan={aranan} />}
+        
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
         <p>© 2025 Hasan Tokatlı</p>
