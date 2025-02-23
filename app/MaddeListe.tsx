@@ -12,13 +12,18 @@ interface MaddeListeProps {
 
 export default function MaddeListe({ maddeler }: MaddeListeProps) {
   return (
-    <div>
-      <h3 className="text-xl mb-6">Maddeler</h3>
+    maddeler.length > 0 ?
+    (
       <div>
-        {maddeler.map((madde, indeks) => (
-          <AnlamListe sira={indeks+1} key={indeks} anlamlarListe={madde.anlamlarListe} />
-        ))}
+        <h3 className="text-xl mb-6">Maddeler</h3>
+        <div>
+          {maddeler.map((madde, indeks) => (
+            <AnlamListe sira={indeks+1} key={indeks} anlamlarListe={madde.anlamlarListe} />
+          ))}
+        </div>
       </div>
-    </div>
+    ) : (
+      <p>Aradığınız kelimeye ait madde bulunamadı.</p>
+    )
   );
 }

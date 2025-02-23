@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import MaddeListe from "./MaddeListe";
 
 export default function Sonuc({ aranan }: { aranan: string }) {
-  const [bulunanMaddeler, setBulunanMaddeler] = useState([]);
+  const [bulunanMaddeler, setBulunanMaddeler] = useState([])
+  const [yukleniyor, setYukleniyor] = useState(true)
 
   useEffect(() => {
     async function anlamGetir() {
@@ -12,19 +13,18 @@ export default function Sonuc({ aranan }: { aranan: string }) {
       const veri = await response.json();
 
       setBulunanMaddeler(veri.filter((eleman: { madde: string }) => eleman.madde === aranan));
+      setYukleniyor(false);
     }
 
     anlamGetir();
   }, [aranan]);
 
-  console.log(bulunanMaddeler)
-
   return (
     <div>
-      {bulunanMaddeler.length > 0 ? (
-        <MaddeListe maddeler={bulunanMaddeler} />
+      {yukleniyor ? (
+        <p>Arama başlatıldı..</p>
       ) : (
-        <p>Aradığınız kelime bulunamadı.</p>
+        <MaddeListe maddeler={bulunanMaddeler} />
       )}
     </div>
   );
