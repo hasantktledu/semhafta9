@@ -19,3 +19,11 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+h1 {
+  @apply text-4xl font-bold flex gap-4;
+}
+
+button {
+  @apply px-[0.5em] py-[0.1em] rounded bg-blue-500 text-white text-[0.5em] inline-block;
+}
