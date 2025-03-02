@@ -1,4 +1,8 @@
-export default function C3({isim}) {
+import { useContext } from "react";
+import { GlobalHavuz, GlobalContextType } from "./global-context";
+
+export default function C3() {
+    const { isim } = useContext<GlobalContextType>(GlobalHavuz);
 
     return (
         <div className="border border-gray-800 p-4 mt-4 rounded">
