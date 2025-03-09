@@ -1,3 +1,5 @@
+"use client"
+
 import Is from "./Is";
 
 export default function IsListe({isler, tamamlandiGuncelle, isSil}) {
