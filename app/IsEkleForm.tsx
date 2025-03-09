@@ -1,4 +1,4 @@
-export default function IsEkleForm({yeniIsEkle}) {
+export default function IsEkleForm({vekilFonksiyon}) {
 
     function formGonder(olay) {
         olay.preventDefault(); // Sayfanın yenilenmesini engelliyoruz.
@@ -10,7 +10,7 @@ export default function IsEkleForm({yeniIsEkle}) {
         const formIsAdi = olay.target.formIsAdi.value; // formdaki is adını alıyoruz.
         if(formIsAdi.trim() === "") { alert("İş bilgisi boş.."); return } // Eğer is adı boşsa fonksiyonu sonlandırıyoruz.
 
-        yeniIsEkle(formIsAdi); // yeniIsEkle fonksiyonunu çalıştırıyoruz.
+        vekilFonksiyon({type: "ekle", isAdi: formIsAdi}); // yeniIsEkle fonksiyonunu çalıştırıyoruz.
     }
 
     return (
