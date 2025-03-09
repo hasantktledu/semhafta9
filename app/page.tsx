@@ -21,6 +21,12 @@ export default function Home() {
     });
   }
 
+  function yeniIsEkle( isAdi:string ) {
+    setIsler( mevcutIsler => {
+      return [...mevcutIsler, { id: Date.now(), isAdi, tamamlandi: false }];
+    });
+  }
+
   useEffect(() => {
     async function veriCek() {
       // veriCek adında bir fonksiyon oluşturduk.
@@ -36,7 +42,7 @@ export default function Home() {
     <main className="flex flex-col items-center justify-center min-h-screen gap-8">
       <h1>ToDo Uygulaması  { isler.filter(is=>is.tamamlandi).length }  / { isler.length } </h1>
       <IsListe isler={isler} tamamlandiGuncelle={tamamlandiGuncelle} />
-      <IsEkleForm />
+      <IsEkleForm yeniIsEkle={yeniIsEkle} />
     </main>
   );
 }
