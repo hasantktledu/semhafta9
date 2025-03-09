@@ -1,16 +1,25 @@
+import { Button } from '@/components/ui/button';
 import { Is as IsType } from '../types/is';
+import { Trash2 } from 'lucide-react';
 
 interface IsProps {
   is: IsType;
   tamamlandiGuncelle: (id: number) => void;
+  isSil: (id: number) => void;
 }
 
-export default function Is({ is, tamamlandiGuncelle }: IsProps) {
+export default function Is({ is, tamamlandiGuncelle, isSil }: IsProps) {
   return (
     <div>
-      <label className='flex items-center gap-2'>
-        <input type="checkbox" checked={is.tamamlandi} onChange={ ()=>tamamlandiGuncelle(is.id) } />
-        <span>{is.isAdi}</span>
+      <label className='flex items-center justify-between w-full gap-2'>
+        <div className='flex items-center gap-2'>
+          <input type="checkbox" checked={is.tamamlandi} onChange={ ()=>tamamlandiGuncelle(is.id) } />
+          <span>{is.isAdi}</span>
+        </div>
+        <Button variant="destructive" size="sm" onClick={ ()=> isSil(is.id) }>
+          <Trash2 className="h-4 w-4 mr-1" />
+          Sil
+        </Button>
       </label>
     </div>
   );
