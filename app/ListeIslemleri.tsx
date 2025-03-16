@@ -4,23 +4,21 @@ import { Button } from "@/components/ui/button";
 import { ArrowDownAZ, ArrowDownZA } from "lucide-react";
 
 export default function ListeIslemleri({
-  setSiralamaTuru,
-  siralamaTuru,
-  setFiltrelemeTuru,
-  filtrelemeTuru
+  vekilFonksiyon,
+  yapilacaklar
 }) {
-  const yeniSiralamaTuru = siralamaTuru === "az" ? "za" : "az"; // yeni sıralama türünü belirliyoruz.
-  const ikonClassName = siralamaTuru !== "" ? "h-4 w-4" : "h-4 w-4 opacity-50";
+  const yeniAlfabetikSiralamaYonu = yapilacaklar.siralama.alfabetikSiralama === "az" ? "za" : "az"; // yeni sıralama türünü belirliyoruz.
+  const ikonClassName = yapilacaklar.siralama.alfabetikSiralama !== "" ? "h-4 w-4" : "h-4 w-4 opacity-50";
 
   return (
     <div className="flex justify-between items-center gap-4">
       <Button
-        onClick={() => setSiralamaTuru(yeniSiralamaTuru)}
+        onClick={() => vekilFonksiyon({type: "alfabetikSirala", yon: yeniAlfabetikSiralamaYonu})}
         variant="secondary"
         size="sm"
         className="border p-2 rounded-md inline-block"
       >
-        {siralamaTuru === "az" || siralamaTuru === "" ? (
+        {yapilacaklar.siralama.alfabetikSiralama === "az" || yapilacaklar.siralama.alfabetikSiralama === "" ? (
           <ArrowDownAZ className={ikonClassName} />
         ) : (
           <ArrowDownZA className={ikonClassName} />
@@ -29,22 +27,22 @@ export default function ListeIslemleri({
 
       <div className="flex gap-2">
         <Button
-          onClick={() => setFiltrelemeTuru("tumu")}
-          variant={filtrelemeTuru === "tumu" ? "default" : "outline"}
+          onClick={() => vekilFonksiyon({type: "tamamlanmaDurumuFiltrele", tamamlanmaDurumu: "tumu"}) }
+          variant={yapilacaklar.filtreler.tamamlanmaDurumu === "tumu" ? "default" : "outline"}
           size={"sm"}
         >
           Tümü
         </Button>
         <Button
-          onClick={() => setFiltrelemeTuru("tamamlanan")}
-          variant={filtrelemeTuru === "tamamlanan" ? "default" : "outline"}
+          onClick={() => vekilFonksiyon({type: "tamamlanmaDurumuFiltrele", tamamlanmaDurumu: "tamamlanan"})}
+          variant={yapilacaklar.filtreler.tamamlanmaDurumu === "tamamlanan" ? "default" : "outline"}
           size={"sm"}
         >
           Tamamlanan
         </Button>
         <Button
-          onClick={() => setFiltrelemeTuru("bekleyen")}
-          variant={filtrelemeTuru === "bekleyen" ? "default" : "outline"}
+          onClick={() => vekilFonksiyon({type: "tamamlanmaDurumuFiltrele", tamamlanmaDurumu: "bekleyen"})}
+          variant={yapilacaklar.filtreler.tamamlanmaDurumu === "bekleyen" ? "default" : "outline"}
           size={"sm"}
         >
           Bekleyen

@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from '@/components/ui/button';
 import { Is as IsType } from '../types/is';
 import { Trash2 } from 'lucide-react';
