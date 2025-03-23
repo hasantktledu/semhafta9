@@ -9,6 +9,10 @@ import {
   selectTodos, 
   selectTodosStatus, 
   selectTodosError, 
+  selectFilter,
+  selectSortBy,
+  setFilter,
+  setSortBy,
   fetchTodos 
 } from '@/lib/features/todos/todosSlice';
 import { AppDispatch, RootState } from '@/lib/store';
@@ -19,6 +23,8 @@ export default function Home() {
   const todos = useSelector((state: RootState) => selectTodos(state));
   const todosStatus = useSelector((state: RootState) => selectTodosStatus(state));
   const todosError = useSelector((state: RootState) => selectTodosError(state));
+  const currentFilter = useSelector((state: RootState) => selectFilter(state));
+  const currentSortBy = useSelector((state: RootState) => selectSortBy(state));
   
   // Initial data fetch when component mounts
   useEffect(() => {
@@ -40,7 +46,9 @@ export default function Home() {
       <div className="z-10 max-w-5xl w-full items-center justify-between text-sm">
         <h1 className="text-4xl font-bold mb-8 text-center">Todo Uygulaması</h1>
         
-
+        {todosStatus === 'loading' && (
+          <div className="text-center py-4">Görevler yükleniyor...</div>
+        )}
         
         {todosStatus === 'failed' && (
           <div className="text-center py-4 text-red-500">Hata: {todosError}</div>
@@ -61,6 +69,59 @@ export default function Home() {
             Ekle
           </button>
         </form>
+        
+        <div className="flex justify-between mb-4">
+          {/* Filtreleme seçenekleri */}
+          <div className="flex space-x-2">
+            <span className="text-gray-700 font-medium">Filtrele:</span>
+            <button
+              onClick={() => dispatch(setFilter('all'))}
+              className={`px-2 py-1 text-sm rounded ${
+                currentFilter === 'all' 
+                  ? 'bg-blue-500 text-white' 
+                  : 'bg-gray-200 hover:bg-gray-300'
+              }`}
+            >
+              Tümü
+            </button>
+            <button
+              onClick={() => dispatch(setFilter('active'))}
+              className={`px-2 py-1 text-sm rounded ${
+                currentFilter === 'active' 
+                  ? 'bg-blue-500 text-white' 
+                  : 'bg-gray-200 hover:bg-gray-300'
+              }`}
+            >
+              Aktif
+            </button>
+            <button
+              onClick={() => dispatch(setFilter('completed'))}
+              className={`px-2 py-1 text-sm rounded ${
+                currentFilter === 'completed' 
+                  ? 'bg-blue-500 text-white' 
+                  : 'bg-gray-200 hover:bg-gray-300'
+              }`}
+            >
+              Tamamlanan
+            </button>
+          </div>
+          
+          {/* Sıralama seçenekleri */}
+          <div className="flex items-center">
+            <span className="text-gray-700 font-medium mr-2">Sırala:</span>
+            <select
+              value={currentSortBy}
+              onChange={(e) => dispatch(setSortBy(e.target.value as 'default' | 'alphabetical-asc' | 'alphabetical-desc' | 'date-asc' | 'date-desc'))}
+              className="p-1 border border-gray-300 rounded text-sm"
+            >
+              <option value="default">Varsayılan</option>
+              <option value="alphabetical-asc">Alfabetik (A-Z)</option>
+              <option value="alphabetical-desc">Alfabetik (Z-A)</option>
+              <option value="date-desc">Tarih (Yeni-Eski)</option>
+              <option value="date-asc">Tarih (Eski-Yeni)</option>
+            </select>
+          </div>
+        </div>
         
         <ul className="w-full">
           {todos.map((todo) => (
@@ -86,13 +147,34 @@ export default function Home() {
           ))}
         </ul>
         
-        {todosStatus === 'loading' && (
-          <div className="text-center py-4">Görevler yükleniyor...</div>
+        {todosStatus === "succeeded" && todos.length === 0 && (
+          <p className="text-center text-gray-500 mt-4">
+            {currentFilter === 'all' 
+              ? 'Henüz görev eklenmedi' 
+              : currentFilter === 'active' 
+                ? 'Aktif görev yok' 
+                : 'Tamamlanan görev yok'}
+          </p>
         )}
-
-        {todosStatus === 'succeeded' && todos.length === 0 && (
-          <p className="text-center text-gray-500 mt-4">Henüz görev eklenmedi</p>
-        )}
+        
+        {/* İstatistikler */}
+        <div className="mt-6 pt-4 border-t border-gray-200">
+          <div className="flex justify-between text-sm text-gray-600">
+            <span>
+              Toplam: {useSelector((state: RootState) => state.todos.items.length)} görev
+            </span>
+            <span>
+              Tamamlanan: {useSelector((state: RootState) => 
+                state.todos.items.filter(todo => todo.completed).length
+              )} görev
+            </span>
+            <span>
+              Kalan: {useSelector((state: RootState) => 
+                state.todos.items.filter(todo => !todo.completed).length
+              )} görev
+            </span>
+          </div>
+        </div>
       </div>
     </main>
   );
