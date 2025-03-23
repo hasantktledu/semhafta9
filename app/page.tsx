@@ -1,14 +1,31 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addTodo, toggleTodo, removeTodo, selectTodos } from '@/lib/features/todos/todosSlice';
+import { 
+  addTodo, 
+  toggleTodo, 
+  removeTodo, 
+  selectTodos, 
+  selectTodosStatus, 
+  selectTodosError, 
+  fetchTodos 
+} from '@/lib/features/todos/todosSlice';
 import { AppDispatch, RootState } from '@/lib/store';
 
 export default function Home() {
   const [input, setInput] = useState('');
   const dispatch = useDispatch<AppDispatch>();
   const todos = useSelector((state: RootState) => selectTodos(state));
+  const todosStatus = useSelector((state: RootState) => selectTodosStatus(state));
+  const todosError = useSelector((state: RootState) => selectTodosError(state));
+  
+  // Initial data fetch when component mounts
+  useEffect(() => {
+    if (todosStatus === 'idle') {
+      dispatch(fetchTodos());
+    }
+  }, [todosStatus, dispatch]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,6 +39,12 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 max-w-5xl w-full items-center justify-between text-sm">
         <h1 className="text-4xl font-bold mb-8 text-center">Todo Uygulaması</h1>
+        
+
+        
+        {todosStatus === 'failed' && (
+          <div className="text-center py-4 text-red-500">Hata: {todosError}</div>
+        )}
         
         <form onSubmit={handleSubmit} className="flex mb-6">
           <input
@@ -63,7 +86,11 @@ export default function Home() {
           ))}
         </ul>
         
-        {todos.length === 0 && (
+        {todosStatus === 'loading' && (
+          <div className="text-center py-4">Görevler yükleniyor...</div>
+        )}
+
+        {todosStatus === 'succeeded' && todos.length === 0 && (
           <p className="text-center text-gray-500 mt-4">Henüz görev eklenmedi</p>
         )}
       </div>
